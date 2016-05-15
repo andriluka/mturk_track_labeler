@@ -1,0 +1,1 @@
+file:///afs/cs.stanford.edu/u/andriluka/code/mechturk/carlabeling_vatic/label_cars_static.html?imgname=https://s3.amazonaws.com/sv-images/driving_data_q50_data/4-30-14-280-split_0_280S_e2/4-30-14-280-split_0_280S_e2_000301.jpeg&object_bonus_usd=0.04&min_box_width=40

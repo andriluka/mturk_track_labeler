@@ -1,0 +1,126 @@
+<html>
+
+<link rel="stylesheet" type="text/css" href="turkic/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="stylesheet.css">
+<link rel="stylesheet" type="text/css" href="jquery-ui/smoothness/jquery-ui-1.8.9.custom.css">
+
+<script src="turkic/javascript.js?v=mar8"></script>
+<script src="jquery-ui/jquery-ui-1.8.9.custom.min.js?v=mar8"></script>
+
+<script src="videoplayer.js?v=jul1"></script>
+<script src="preload.js?v=jul1"></script>
+<script src="objectui.js?v=jul1"></script>
+<script src="ui.js?v=jul1"></script>
+<script src="instructions_label_cars.js?v=jul1"></script>
+<script src="job.js?v=jul1"></script>
+<script src="tracks.js?v=jul1"></script>
+<script src="bootstrap.js?v=jul1"></script>
+<script src="ma_static_test2.js"></script>
+
+<body onload='init_objectui()'>
+
+<div id="static_container"></div>
+
+<script type="text/javascript">
+  var container = $("#static_container");
+
+  var imgwidth = gup_image_width();
+  var imgheight = gup_image_height();
+
+  //var param_min_box_width = gup("min_box_width");
+  var param_min_box_width = gup("mw");
+  if (param_min_box_width == "")
+    param_min_box_width = job.min_box_width;
+
+  //var param_object_bonus_usd = gup("object_bonus_usd");
+  var param_object_bonus_usd = gup("ob");
+  if (param_object_bonus_usd == "")
+    param_object_bonus_usd = job.object_bonus_usd;
+
+  container_width = parseInt(imgwidth) + 220;
+  container_height = parseInt(imgheight) + 30;
+
+  container.css("width", container_width + "px");
+  container.css("height", container_height + "px");
+
+  //container.css("width", "1500px");
+  //container.css("height", "980px");
+
+  // MA: removed instructions button
+  //<div id='instructionsbutton' class='button'>Instructions</div>
+  //Read these <a href='label_cars_instructions/index.html'>instructions</a> before you start.
+
+  //var cur_html = "<table><tr align='center'><td>Label all vehicles (cars, trucks, motorcycles, etc...) you see in the image. Label vehicles not traveling on our road if <strong> 60% </strong> or more of the vehicle is showing, and there is no doubt they are vehicles.";
+
+   var cur_html = "<table>Label people in the image by marking their head with a bounding box. ";
+   if (param_min_box_width > 0) {
+  	cur_html += "Please only label a person if corresponding bounding box is wider than <strong>" + param_min_box_width + " pixels</strong>. ";
+   }
+
+  if (param_object_bonus_usd > 0) {
+  	cur_html += "You will receive bonus of <strong>" + param_object_bonus_usd + "</strong> USD for each labeled person.";
+  }
+
+  // cur_html += "<br>Read <a href='instructions_label_cars_nw.html'>instructions</a></font> before you begin.</td>" +
+  cur_html += "<br></td>" +
+      "<td><div id='topbar'></div></td>" +
+      "</tr>" +
+    "<tr>" +
+      "<td><div id='videoframe'></div></td>" +
+      "<td rowspan='2'><div id='sidebar'></div></td>" +
+      "</tr>" +
+    "<tr>" +
+      "<td><div id='bottombar'></div></td>" +
+      "</tr>" +
+    "<tr>" +
+      "<td><div id='advancedoptions'></div></td>" +
+      "<td><div id='submitbar'></div></td>" +
+      "</tr>" +
+    "</table>";
+
+  $(cur_html).appendTo(container).css("width", "100%");
+</script>
+
+<br>
+<div align=left>
+<!--   <table width=1024> -->
+<table width=640> 
+    <tr align=center><td>
+      <form id="mturk_form" method="POST" action="https://www.mturk.com/mturk/externalSubmit"> 
+      <!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit">-->
+      <input type="hidden" id="assignmentId" name="assignmentId" value="">
+      <input type="hidden" id="object_bbox" name="results" value="">
+      <br>
+      <br>
+      Comments: <input type="text" id="commentsbox" name="commentsbox" size=40 onfocus="commentbox_focus = 1;" onblur="commentbox_focus=0;"/>
+
+      <input id="submitButton" type="button" name="Submit Results" value="Submit Results" onClick="submitResults()">
+      </form>
+    </td></tr>
+  </table>
+</div>
+
+<script type="text/javascript">
+document.getElementById('assignmentId').value = gup('assignmentId');
+
+//
+// Check if the worker is PREVIEWING the HIT or if they've ACCEPTED the HIT
+//
+if (gup('assignmentId') == "ASSIGNMENT_ID_NOT_AVAILABLE")
+{
+    // If we're previewing, disable the button and give it a helpful message
+    document.getElementById('submitButton').disabled = true;
+    document.getElementById('submitButton').value = "You must ACCEPT the HIT before you can submit the results.";
+}
+else {
+    var form = document.getElementById('mturk_form');
+
+    if (document.referrer && ( document.referrer.indexOf('workersandbox') != -1) ) {
+      form.action = "https://workersandbox.mturk.com/mturk/externalSubmit";
+    }
+}
+</script>
+
+
+</body>
+</html>

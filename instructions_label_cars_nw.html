@@ -1,0 +1,40 @@
+<html><body>
+<h1>Instructions</h1>
+
+<p>In this task we ask you to annotate vehicles in the images of highway scenes. Each vehicle has to be annotated with a bounding box.</p>
+
+<ul>
+<li>Annotate <strong>every vehicle</strong> that is driving on the highway in the same direction as your car.</li>
+<li>Skip the vehicles that are driving in the opposite direction.</li>
+<li>Skip tiny vehicles that are far away and barely visible.</li>
+<li>Mark partially occluded vehicles using the 'Occluded or truncated' checkbox as shown in this <a href='#labelocc'>example</a>.</li>
+</ul>
+    
+<p>You can use the <strong>keyboard shortcuts</strong> to speed up the labeling: <font color='blue'>'n'</font> - new vehicle, <font color='blue'>'t'</font> - toggle between occluded/visible state, <font color='blue'>'d'</font> - delete vehicle.</p>
+
+<br>
+<table width='100%'><tr align=center><td><img width='950px' src='label_cars_instructions/example1.jpg'></td></tr></table>
+<table width='100%'><tr align=center><td><a name='labelocc'><img width='950px' src='label_cars_instructions/example2.jpg'></a></td></tr></table>
+
+<br><h2>Labeling vehicles</h2>
+
+<p>Click the <strong>New Object</strong> button to start annotating a vehicle. Position your cursor over the view screen to click on the corner of a vehicle. Use the cross hairs to line up your click. Click on another corner to finish drawing the box. Resize the box, if necessary, by dragging the edges of the box.</p>
+
+<p>Annotate all vehicles driving in the same direction as your car, regardless if they are on the same road or not. Take a look at this <a href='#labelfork'>example.</a></p>
+
+<p><strong>Note:</strong> the annotation rectangle should tightly and completely enclose the vehicle you are annotating. Take a look at the examples below, and also at these <a href='#labelexamples'>examples</a> of labeled images.</p>
+
+<p align='center'><table><tr align=center><td><img width='320px' src='label_cars_instructions/car_label_ok.jpg'></td><td><img width='320px' src='label_cars_instructions/car_label_too_loose.jpg'></td><td><img width='320px' src='label_cars_instructions/car_label_too_tight.jpg'></td></tr><tr align=center><th><font color='green'>Good</font></th><th><font color='red'>Bad - bounding box is too loose</font></th><th><font color='red'>Bad - bounding box is imprecise</font></th></tr></table></p>
+
+<p><strong>Note:</strong> annotate all types of vehicels including motorcycles, buses and trucks. Take a look at the examples below:</p>
+<p align='center'><table><tr align=center><td><img height='200px' src='label_cars_instructions/type6.jpeg'></td><td><img height='200px' src='label_cars_instructions/type1.jpeg'></td><td><img height='200px' src='label_cars_instructions/type2.jpeg'></td><td><img height='200px' src='label_cars_instructions/type3.jpeg'></td><td><img height='200px' src='label_cars_instructions/type4.jpeg'></td><td><img height='200px' src='label_cars_instructions/type5.jpeg'></td></table></p>
+
+<br><h2><a name='labelexamples'>Examples of labeled images:</a></h2><br>
+<table width='100%'><tr align=center><td><img width='950px' src='label_cars_instructions/example_driving1.jpg'></td></tr></table>
+<table width='100%'><tr align=center><td><img width='950px' src='label_cars_instructions/example_driving2.jpg'></td></tr></table>
+<table width='100%'><tr align=center><td><img width='950px' src='label_cars_instructions/example_driving3.jpg'></td></tr></table>
+<table width='100%'><tr align=center><td><img width='950px' src='label_cars_instructions/example_driving4.jpg'></td></tr></table>
+<table width='100%'><tr align=center><td><a name='labelfork'><img width='950px' src='label_cars_instructions/example_driving5.jpg'></td></a></tr></table>
+
+</body>
+</html>
