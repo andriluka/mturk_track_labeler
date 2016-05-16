@@ -94,6 +94,7 @@ function init_objectui() {
     job.labels = new Array();
     //job.labels[0] = "Car";
     job.labels[0] = "Person";
+    job.labels[1] = "Clothing Item";
 
     job.attributes = [];
     job.training = 0;
