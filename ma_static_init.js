@@ -201,17 +201,19 @@ function init_objectui() {
 	var add_frameidx = 0;
 	var add_attributes = [];
 
+	var add_path = [];
 	for (var idx = 0; idx < tokens.length; idx += 4) {
-	    //var add_pos = [parseInt(tokens[idx]), parseInt(tokens[idx+1]), parseInt(tokens[idx+2]), parseInt(tokens[idx+3])];
 	    var add_pos = [tokens[idx], tokens[idx+1], tokens[idx+2], tokens[idx+3]];
 
 	    // x1, y1, x2, y2, frameidx, occluded, truncated 
-	    add_path = [[add_pos[0], add_pos[1], add_pos[2], add_pos[3], add_frameidx, 0, 0]];
-	    var add_obj = objectui.injectnewobject(add_labelid, add_path, add_attributes);
-	    add_obj.track.onupdate.push(function(){add_obj.updateboxtext();});
-	    add_obj.track.preloaded_pos = add_pos;
-	    objectui.objects.push(add_obj);	    
+	    add_path.push([add_pos[0], add_pos[1], add_pos[2], add_pos[3], add_frameidx, 0, 0]);
+	    add_frameidx += 1;
 	} 
+
+	var add_obj = objectui.injectnewobject(add_labelid, add_path, add_attributes);
+	add_obj.track.onupdate.push(function(){add_obj.updateboxtext();});
+	add_obj.track.preloaded_pos = add_pos;
+	objectui.objects.push(add_obj);	    
     }
     
     var new_bonus_object_count = count_bonus_objects(job, tracks);
@@ -221,7 +223,6 @@ function init_objectui() {
     ui_setupbuttons(job, player, tracks);
 
     ui_setupslider(player);
-
 }
 
 // what to submit to AMT server

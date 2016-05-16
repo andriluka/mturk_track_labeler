@@ -302,46 +302,47 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
 	    $("#trackobject" + tracks.currentptr.id + "delete").click();
 	}
 
-        // if (keycode == 114)
-        // {
-        //     $("#rewindbutton").click();
-        // }
-        // else if (keycode == 110)
-        // {
-        //     $("#newobjectbutton").click();
-        // }
-        // else if (keycode == 104)
-        // {
-        //     $("#annotateoptionshideboxes").click();
-        // }
-        // else 
-        // {
-        //     var skip = 0;
-        //     if (keycode == 44 || keycode == 100)
-        //     {
-        //         skip = job.skip > 0 ? -job.skip : -10;
-        //     }
-        //     else if (keycode == 46 || keycode == 102)
-        //     {
-        //         skip = job.skip > 0 ? job.skip : 10;
-        //     }
-        //     else if (keycode == 62 || keycode == 118)
-        //     {
-        //         skip = job.skip > 0 ? job.skip : 1;
-        //     }
-        //     else if (keycode == 60 || keycode == 99)
-        //     {
-        //         skip = job.skip > 0 ? -job.skip : -1;
-        //     }
+        if (keycode == 114)
+        {
+            $("#rewindbutton").click();
+        }
+        else if (keycode == 110)
+        {
+            $("#newobjectbutton").click();
+        }
+        else if (keycode == 104)
+        {
+            $("#annotateoptionshideboxes").click();
+        }
+        else 
+        {
+            var skip = 0;
+            if (keycode == 44 || keycode == 100)
+            {
+                skip = job.skip > 0 ? -job.skip : -10;
+            }
+            else if (keycode == 46 || keycode == 102)
+            {
+                skip = job.skip > 0 ? job.skip : 10;
+            }
+            else if (keycode == 62 || keycode == 118)
+            {
+                skip = job.skip > 0 ? job.skip : 1;
+            }
+            else if (keycode == 60 || keycode == 99)
+            {
+                skip = job.skip > 0 ? -job.skip : -1;
+            }
 
-        //     if (skip != 0)
-        //     {
-        //         player.pause();
-        //         player.displace(skip);
+            if (skip != 0)
+            {
+                player.pause();
+                player.displace(skip);
 
-        //         ui_snaptokeyframe(job, player);
-        //     }
-        // }
+                ui_snaptokeyframe(job, player);
+            }
+        }
+
     });
 
 }
