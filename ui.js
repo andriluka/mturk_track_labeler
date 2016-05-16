@@ -371,7 +371,7 @@ function ui_setupslider(player)
 
             // probably too much bandwidth
             //eventlog("slider", "Seek to " + ui.value);
-	    console.log("slider: " + ui.value);
+	    //console.log("slider: " + ui.value);
         }
     });
 

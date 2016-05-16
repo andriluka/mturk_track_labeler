@@ -33,9 +33,35 @@ function gup_image_height() {
     return imgheight;
 }
 
+function gup_num_frames() {
+    var num_frames = gup("n");
+    if (num_frames == "")
+	num_frames = 1;
+    else
+	num_frames = parseInt(num_frames, 10);
+
+    return num_frames;
+}
+
+function gup_frame_step() {
+    var framestep = gup("st");
+    if (framestep == "")
+	framestep = 1;
+    else
+	framestep = parseInt(framestep, 10);
+
+    return framestep;
+}
+
+
 function init_objectui() {
 
     imgname = gup("imgname");
+    num_frames = gup_num_frames();
+    framestep = gup_frame_step();
+
+    console.log("num_frames:" + num_frames)
+
     if (imgname.substring(0, 4) != "http") {
 	// compact version - workaround because hit input is limited to 255 characters
 	sidx = imgname.lastIndexOf('_');
@@ -53,22 +79,11 @@ function init_objectui() {
 
     job.slug = "Slug: string job id ";
     job.start = 0;
-    job.stop = 2;
+    //job.stop = 2;
+    job.stop = num_frames - 1;
 
     job.width = imgwidth;
     job.height = imgheight;
-
-    // vatic default
-    //job.width = 1280;
-    //job.height = 720;
-
-    // Q50 narrow field of view camera
-    // job.width = 1280;
-    // job.height = 960;
-
-    // Q50 wide field of view camera
-    //job.width = 1040;
-    //job.height = 520;
 
     job.skip = 0;
     job.perobject = 0;
@@ -101,32 +116,33 @@ function init_objectui() {
     
     job.frameurl = function(i)
     {
-	idxfname = imgname.lastIndexOf('/');
-	fpath = imgname.substring(0, idxfname)
-	fname = imgname.substring(idxfname + 1);
+	var idxfname = imgname.lastIndexOf('/');
+	var fpath = imgname.substring(0, idxfname)
+	var fname = imgname.substring(idxfname + 1);
 
-	idxext = fname.lastIndexOf('.');
-	fext = fname.substring(idxext + 1);
+	var idxext = fname.lastIndexOf('.');
+	var fext = fname.substring(idxext + 1);
 	fname = fname.substring(0, idxext)
 
-	frameidx = parseInt(fname, 10)
-	is_zero_pad = false;
+	var frameidx = parseInt(fname, 10)
+	var is_zero_pad = false;
 	if (fname.length > frameidx.toString().length)
 	    is_zero_pad = true;
 
-	// console.log(fpath)
-	// console.log(fname)
-	// console.log(fext)
-	// console.log(is_zero_pad)
+	//console.log(fpath)
+	//console.log(fname)
+	//console.log(fext)
+	//console.log(is_zero_pad)
 
-	next_frameidx_str = i.toString()
+	next_frameidx_str = (frameidx + i*framestep).toString()
+
 	if (is_zero_pad) {
 	    while (next_frameidx_str.length < fname.length)
 		next_frameidx_str = "0" + next_frameidx_str;
 	}
 
 	urlstr = fpath + "/" + next_frameidx_str + "." + fext
-	// console.log(urlstr)
+	//console.log(urlstr)
 	return urlstr;
 
 	//return imgname;
@@ -138,11 +154,6 @@ function init_objectui() {
     }
 
     var videoframe = $("#videoframe");
-    // videoframe.css("width", "1024px");
-    // videoframe.css("height", "720px");
-
-    //videoframe.css("width", "1280px");
-    //videoframe.css("height", "960px");
     
     videoframe.css("width", job.width + "px");
     videoframe.css("height", job.height + "px");
