@@ -101,7 +101,35 @@ function init_objectui() {
     
     job.frameurl = function(i)
     {
-	return imgname;
+	idxfname = imgname.lastIndexOf('/');
+	fpath = imgname.substring(0, idxfname)
+	fname = imgname.substring(idxfname + 1);
+
+	idxext = fname.lastIndexOf('.');
+	fext = fname.substring(idxext + 1);
+	fname = fname.substring(0, idxext)
+
+	frameidx = parseInt(fname, 10)
+	is_zero_pad = false;
+	if (fname.length > frameidx.toString().length)
+	    is_zero_pad = true;
+
+	// console.log(fpath)
+	// console.log(fname)
+	// console.log(fext)
+	// console.log(is_zero_pad)
+
+	next_frameidx_str = i.toString()
+	if (is_zero_pad) {
+	    while (next_frameidx_str.length < fname.length)
+		next_frameidx_str = "0" + next_frameidx_str;
+	}
+
+	urlstr = fpath + "/" + next_frameidx_str + "." + fext
+	// console.log(urlstr)
+	return urlstr;
+
+	//return imgname;
 
         // folder1 = parseInt(Math.floor(i / 100));
         // folder2 = parseInt(Math.floor(i / 10000));
