@@ -129,6 +129,11 @@ function init_objectui() {
 
     var objectui = new TrackObjectUI($("#newobjectbutton"), $("#objectcontainer"), videoframe, job, player, tracks);
 
+    // init video slider
+    $("#bottombar").append("<div id='playerslider'></div>");
+    $("#bottombar").append("<div class='button' id='rewindbutton'>Rewind</div> ");
+    $("#bottombar").append("<div class='button' id='playbutton'>Play</div> ");
+
     // MA: pre-load objects 
     //var preload_rects_param = gup("rects");
     var preload_rects_param = gup("r");
@@ -175,6 +180,9 @@ function init_objectui() {
 
     ui_setupkeyboardshortcuts(job, player, tracks);
     ui_setupbuttons(job, player, tracks);
+
+    ui_setupslider(player);
+
 }
 
 // what to submit to AMT server

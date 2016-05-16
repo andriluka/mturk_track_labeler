@@ -366,11 +366,12 @@ function ui_setupslider(player)
         max: player.job.stop,
         slide: function(event, ui) {
 	    // MA
-            //player.pause();
-            //player.seek(ui.value);
+            player.pause();
+            player.seek(ui.value);
 
             // probably too much bandwidth
             //eventlog("slider", "Seek to " + ui.value);
+	    console.log("slider: " + ui.value);
         }
     });
 
