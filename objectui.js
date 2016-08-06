@@ -175,78 +175,20 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
         this.tracks.draggable(false);
     }
 
-
-    /*
-     * Method called when we receive a click on the target area.
-     */
-
-    function dotprod(x1, x2) 
-    {
-    	ma_assert(x1.length == x2.length);
-	var res = 0;
-
-	for (var idx = 0; idx < x1.length; ++idx)
-	    res += x1[idx]*x2[idx];
-
-	return res;
-    }
-    
-    function predict_box(xc, yc) 
-    {
-	// MA: 
-	// 0: sears, 
-	// 1: mission bay 360, 1280x1280, 
-	// 2: gap cam03 in hillsdale
-	// 3: gap pvm ~ "Entrance", 1280x
-	// 4: gap wm (new)
-	// 5: athleta-townandcountry
-	var w_cams = [
-	    [[-7.672041918747931, 1.0175067911024558, -0.06590469040374715, -7.211280247984336e-05, 0.00012771147864107607, 1.477529485324053e-05, 8.020388243953555e-08, -4.341880717462221e-07], [-10.917894545401326, 0.032551186687820415, 0.9915173195310345, -0.00011444394152173958, -0.0004821829954749597, -8.071634820381278e-06, 1.2617700063249915e-07, 1.1268500293981631e-06], [7.672041977916478, 0.982493209014998, 0.06590469047041211, 7.211280204022822e-05, -0.00012771147863909675, -1.4775294880859009e-05, -8.020388248463836e-08, 4.341880717600999e-07], [10.917894544272448, -0.032551186679112984, 1.008482680499281, 0.00011444394150978907, 0.00048218299533289537, 8.071634815310681e-06, -1.2617700064637694e-07, -1.1268500295091854e-06]],
-	    [[32.16754917484052, 0.8809580740561793, -0.10164541672705144, 0.00011687399557293178, 8.030197168137462e-05, 4.2376165210809645e-06, -2.410636918553921e-08, -5.127424110296097e-09], [33.245060018201364, -0.10818100048100977, 0.8879367108452643, 8.831688001734479e-05, 9.680024218163853e-05, 1.9533507009137708e-06, -6.388489459663305e-09, -1.1284559064961286e-08], [-32.167548696528506, 1.1190419254338313, 0.10164541632320057, -0.00011687399481189304, -8.030197137915738e-05, -4.2376165020611395e-06, 2.410636868593885e-08, 5.1274241519294605e-09], [-33.24506002494341, 0.10818100068318327, 1.1120632897046476, -8.831688020089686e-05, -9.680024271996887e-05, -1.953350696183234e-06, 6.388489293129851e-09, 1.1284558953938983e-08]],
-	    [[0.4874187502373933, 0.9438815323923854, -0.002997178937149596, 6.53204373348383e-05, -0.00021865502076448703, 3.2501748396410385e-06, -2.4374515828775277e-08, 2.1123238769672065e-07], [-2.4550309224372464, -0.05014352752288754, 0.9956329527528365, 6.433707908552202e-05, -0.0002297974199932161, -5.550747734570116e-06, -2.7037680538910536e-08, 2.445021393127078e-07], [-0.48741859366169943, 1.0561184677488642, 0.00299717906786916, -6.532043765673898e-05, 0.00021865502071334147, -3.2501748381862564e-06, 2.437451585555507e-08, -2.112323876819755e-07], [2.455030968115854, 0.05014352754567731, 1.0043670473313262, -6.43370791194235e-05, 0.00022979741952009651, 5.55074773028459e-06, 2.703768045564381e-08, -2.445021389796409e-07]],
-	    [[4.200504337155643, 0.9500879015575776, -0.07370337082837151, 5.004044763551557e-05, 1.8882467716954752e-05, 8.976036054408865e-06, -1.0061758981549929e-08, -9.46304876126014e-09], [-4.531712648525561, -0.027024942487168847, 0.9762786731527517, 1.5867648614032034e-05, -0.000244969631254174, 1.0763614580744758e-05, 4.89383253018949e-09, 2.904327342891696e-07], [-4.200503264614177, 1.0499120989938298, 0.07370337091580866, -5.004044815248474e-05, -1.8882467812896317e-05, -8.9760360867694e-06, 1.0061758759505324e-08, 9.463048747382352e-09], [4.531712693185687, 0.027024942491943312, 1.023721326728986, -1.586764861968918e-05, 0.0002449696314163281, -1.0763614581061195e-05, -4.893832547536725e-09, -2.9043273447066503e-07]],
-	    [[-9.155114497925345, 0.9839847748284203, -0.009039703257387609, 1.5493352883773955e-05, -4.443616306261492e-05, -7.622674291746451e-06, -3.650591495762967e-09, 3.8409216390755674e-08], [-11.047726671268439, -0.015164068000041348, 1.00675460445586, 1.4850759286950718e-05, -0.0001276471567652913, -6.575303466558092e-06, -5.233742559132559e-09, 1.3289973691031978e-07], [9.155114454233871, 1.016015224990166, 0.009039703300698065, -1.549335256509311e-05, 4.443616302593321e-05, 7.622674288604216e-06, 3.6505913847406646e-09, -3.840921633524452e-08], [11.047726649524826, 0.015164067998400378, 0.9932453957282882, -1.4850759279999996e-05, 0.00012764715652170217, 6.575303465588846e-06, 5.233742557397836e-09, -1.3289973693547327e-07]],
-	    [[34.68776876349583, 0.8925980104662986, -0.1138074713267876, 7.173834211783461e-05, 9.249388755172344e-05, 8.509642537935045e-07, 6.425728171777223e-09, -7.015638070484442e-10], [37.12348844720696, -0.12727901812024645, 0.9052806215315038, 8.443681533043296e-05, 6.065877420065553e-05, 2.8919978593151255e-06, 5.787493331799176e-09, 1.4243452334250506e-08], [-34.687768066759666, 1.1074019888353515, 0.11380747078232167, -7.173834182788025e-05, -9.249388696088963e-05, -8.509642757938097e-07, -6.4257282827995255e-09, 7.015633629592344e-10], [-37.123488081858255, 0.1272790173645156, 1.0947193778109539, -8.443681481623448e-05, -6.065877346529161e-05, -2.8919978520793634e-06, -5.787493276288025e-09, -1.4243452611806262e-08]]
-	];
-
-	ma_assert(job.camidx >= 0, "error: missing camera index");
-
-	if (job.camidx < w_cams.length && w_cams[job.camidx].length > 0) {
-	    console.log('using parameters for camera ' + job.camidx);
-	    w = w_cams[job.camidx];
-
-    	    var f = [1, xc, yc, xc*xc, yc*yc, xc*yc, xc*xc*xc, yc*yc*yc];
-
-	    var x1 = Math.round(dotprod(w[0], f));
-	    var y1 = Math.round(dotprod(w[1], f));
-
-	    var x2 = Math.round(dotprod(w[2], f));
-	    var y2 = Math.round(dotprod(w[3], f));
-
-	    console.log("(" + x1 + "," + y1 + ")" + ", (" + x2 + "," + y2 + ")");
-
-	    return new Position(x1, y1, x2, y2);
-	}
-	else {
-	    console.log('camidx: ' + job.camidx); 
-	    console.log('num_cams:: ' + w_cams.length); 
-	    if (job.camidx < w_cams.length) {
-		console.log('num_params:: ' + w_cams[job.camidx].length); 
-	    }
-	    alert('camera-specific parameters undefined!!!');
-	}
-    }
-
     // MA: predicted bounding box 
     this.stopdrawing_predict = function(click_pos)
     {
         console.log("stopdrawing_predict: Received new track object drawing");
+	console.log("click_pos: " + click_pos);
 
 	ma_assert(click_pos.length == 2);
-	position = predict_box(click_pos[0], click_pos[1]);
+	//position = predict_box(click_pos[0], click_pos[1]);
+	position = this.job.job_predict_box(click_pos[0], click_pos[1]);
+	console.log("position: " + position);
 
-        this.currentcolor = this.pickcolor();
+        //this.currentcolor = this.pickcolor();
         var track = tracks.add(player.frame, position, this.currentcolor[0]);
+	this.job.last_track = track;
 
         this.drawer.disable();
         ui_disable();
@@ -255,8 +197,15 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
             me.stopnewobject();
         });
 
-        this.currentobject.initialize(this.counter, track, this.tracks);
+        //me.stopnewobject();
+
+	this.currentobject.initialize(this.counter, track, this.tracks);
         this.currentobject.stateclassify();
+
+	// MA: currently used to access track in ui_setupkeyboardshortcuts
+	this.tracks.currentid = this.currentobject.id
+	this.tracks.currentptr = this.currentobject
+
     }
 
     this.stopdrawing = function(position)
@@ -373,6 +322,71 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
             });
 	}
 
+	// MA: 
+	if (job.do_move_on_click) {
+	    this.drawer.onclick = function(xc, yc) {
+		var offset = videoframe.offset();
+
+		var page_xc = xc + offset.left;
+		var page_yc = yc + offset.top;
+
+		// check if ggwe are inside some rect (if yes we interfere with drag'n'drop)
+		var is_in_rect = false;
+
+		for (var tidx = 0; tidx < tracks.tracks.length; ++tidx) {
+		    var bounds = tracks.tracks[tidx].journal.bounds(player.frame);
+
+		    // MA: rectangles are visible all the time so this check does not make sence 
+		    left_outside = false;
+		    right_outside = false;
+
+		    // left_outside = true;
+		    // if (bounds['left'] != null) 
+		    // 	left_outside = bounds['left'].outside;
+
+		    // right_outside = true;
+		    // if (bounds['right'] != null)
+		    // 	right_outside = bounds['right'].outside;
+
+		    // MA: only check tracks that are inside the frame
+		    if (!left_outside && !right_outside) {
+			var cur_l = parseInt(tracks.tracks[tidx].handle.css("left"));
+			var cur_t = parseInt(tracks.tracks[tidx].handle.css("top"));
+			var cur_r = cur_l + parseInt(tracks.tracks[tidx].handle.css("width"));
+			var cur_b = cur_t + parseInt(tracks.tracks[tidx].handle.css("height"));
+
+			if (page_xc >= cur_l && page_xc <= cur_r && page_yc >= cur_t && page_yc <= cur_b) {
+		    	    is_in_rect = true;
+		    	    break;
+			}
+		    }
+		}
+
+		console.log('is_in_rect: ' + is_in_rect);
+
+		if (tracks && !is_in_rect) {
+		    if (tracks.tracks) {
+			if (tracks.tracks.length > 0) {
+			    if (job.last_track != null) {
+				var edit_track = job.last_track;
+				
+				edit_track.handle.css("left", page_xc - parseInt(edit_track.handle.css("width"))/2);
+				edit_track.handle.css("top", page_yc - parseInt(edit_track.handle.css("height"))/2);
+
+				edit_track.fixposition();
+				edit_track.recordposition();                
+				edit_track.notifyupdate();
+			    }
+			}
+		    }
+		}
+	    };
+	}
+
+
+
+
+
 	// MA
         //var html = "<p>In this video, please track all of these objects:</p>";
 
@@ -381,7 +395,7 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
 
 	var html = "<div id='bonus_counter'><p align='center'>Bonus for labeled objects:<br><font color='DarkOrange'>0.00 USD</font></p></div>";
 
-        html += "<p align='center'>Keyboard shortcuts: <font color='blue'>'n'</font> - new vehicle, <font color='blue'>'t'</font> - toggle between partially and fully visible state, <font color='blue'>'d'</font> - delete vehicle.</p><br>";
+        html += "<p align='center'>Keyboard shortcuts: <font color='blue'>'n'</font> - new object, <font color='blue'>'t'</font> - toggle 'outside of view frame' state, <font color='blue'>'e'</font> - toggle 'examining products' state, <font color='blue'>'d'</font> - delete object, <font color='blue'>'c'</font> - seek back by one frame, <font color='blue'>'v'</font> - seek forward by one frame.</p><br>";
 
 	// MA: ETH dataset 
 	// if (hintidx == 0) {
@@ -692,8 +706,9 @@ function TrackObject(job, player, container, color)
         {
             if (this.track.estimateattribute(i, this.player.frame))
             {
-                str += "<br>";
-                str += this.job.attributes[this.track.label][i];
+                //str += "<br>";
+                str += ", ";
+                str += this.job.attributes[this.track.label][i][0] + ".";
                 count++;
             }
         }
@@ -712,40 +727,42 @@ function TrackObject(job, player, container, color)
 
     this.setupdetails = function()
     {
-	// MA
-        //this.details.append("<input type='checkbox' id='trackobject" + this.id + "lost'> <label for='trackobject" + this.id + "lost'>Outside of view frame</label><br>");
+	// MA: added back since we are tracking objects now
+        this.details.append("<input type='checkbox' id='trackobject" + this.id + "lost'> <label for='trackobject" + this.id + "lost'>Outside of view frame</label><br>");
 
 	// MA: not showing the visible/hidden checkbox for now
-        this.details.append("<div style='display:none'><input type='checkbox' id='trackobject" + this.id + "occluded'> <label for='trackobject" + this.id + "occluded'>Occluded or truncated</label><br></div>");
+        //this.details.append("<div style='display:none'><input type='checkbox' id='trackobject" + this.id + "occluded'> <label for='trackobject" + this.id + "occluded'>Occluded or truncated</label><br></div>");
 
-        for (var i in this.job.attributes[this.track.label])
-        {
-            this.details.append("<input type='checkbox' id='trackobject" + this.id + "attribute" + i + "'> <label for='trackobject" + this.id + "attribute" + i +"'>" + this.job.attributes[this.track.label][i] + "</label><br>");
+	if (this.track.label < this.job.attributes.length) {
+            for (var i in this.job.attributes[this.track.label])
+            {
+		this.details.append("<input type='checkbox' id='trackobject" + this.id + "attribute" + i + "'> <label for='trackobject" + this.id + "attribute" + i +"'>" + this.job.attributes[this.track.label][i] + "</label><br>");
 
-            // create a closure on attributeid
-            (function(attributeid) {
+		// create a closure on attributeid
+		(function(attributeid) {
 
-                $("#trackobject" + me.id + "attribute" + i).click(function() {
-                    me.player.pause();
+                    $("#trackobject" + me.id + "attribute" + i).click(function() {
+			me.player.pause();
 
-                    var checked = $(this).attr("checked");
-                    me.track.setattribute(attributeid, checked ? true : false);
-                    me.track.notifyupdate();
+			var checked = $(this).attr("checked");
+			me.track.setattribute(attributeid, checked ? true : false);
+			me.track.notifyupdate();
 
-                    me.updateboxtext();
+			me.updateboxtext();
 
-                    if (checked)
-                    {
-                        eventlog("markattribute", "Mark object as " + me.job.attributes[me.track.label][attributeid]);
-                    }
-                    else
-                    {
-                        eventlog("markattribute", "Mark object as not " + me.job.attributes[me.track.label][attributeid]);
-                    }
-                });
+			if (checked)
+			{
+                            eventlog("markattribute", "Mark object as " + me.job.attributes[me.track.label][attributeid]);
+			}
+			else
+			{
+                            eventlog("markattribute", "Mark object as not " + me.job.attributes[me.track.label][attributeid]);
+			}
+                    });
 
-            })(i);
-        }
+		})(i);
+            }
+	}
 
 
         $("#trackobject" + this.id + "lost").click(function() {

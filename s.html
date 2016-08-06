@@ -17,12 +17,19 @@
 <script src="bootstrap.js?v=jul1"></script>
 <script src="ma_static_init.js"></script>
 
-<body onload='init_objectui()'>
+<body onload='preload_images()'>
 
 <div id="static_container"></div>
 
 <script type="text/javascript">
   var container = $("#static_container");
+
+  // MA: preload slider
+  var ls = $("<div id='loadingscreen'></div>");
+  ls.append("<div id='loadingscreentext'>Downloading the task...</div>");
+  ls.append("<div id='loadingscreenslider'></div>");
+  $(ls).appendTo(container);
+
 
   var imgwidth = gup_image_width();
   var imgheight = gup_image_height();
@@ -52,7 +59,7 @@
 
   //var cur_html = "<table><tr align='center'><td>Label all vehicles (cars, trucks, motorcycles, etc...) you see in the image. Label vehicles not traveling on our road if <strong> 60% </strong> or more of the vehicle is showing, and there is no doubt they are vehicles.";
 
-   var cur_html = "<table>Label people in the image by marking their head with a bounding box. ";
+   var cur_html = "<table><div id='intro_text'>Label people in the image by marking their head with a bounding box. ";
    if (param_min_box_width > 0) {
   	cur_html += "Please only label a person if corresponding bounding box is wider than <strong>" + param_min_box_width + " pixels</strong>. ";
    }
@@ -60,6 +67,7 @@
   if (param_object_bonus_usd > 0) {
   	cur_html += "You will receive bonus of <strong>" + param_object_bonus_usd + "</strong> USD for each labeled person.";
   }
+  cur_html += '</div>'
 
   // cur_html += "<br>Read <a href='instructions_label_cars_nw.html'>instructions</a></font> before you begin.</td>" +
   cur_html += "<br></td>" +
@@ -82,7 +90,7 @@
 </script>
 
 <br>
-<div align=left>
+<div align=left id='submit_container'>
 <!--   <table width=1024> -->
 <table width=640> 
     <tr align=center><td>
@@ -90,6 +98,8 @@
       <!-- <form id="mturk_form" method="POST" action="https://workersandbox.mturk.com/mturk/externalSubmit">-->
       <input type="hidden" id="assignmentId" name="assignmentId" value="">
       <input type="hidden" id="object_bbox" name="results" value="">
+      <br>
+      <br>
       <br>
       <br>
       Comments: <input type="text" id="commentsbox" name="commentsbox" size=40 onfocus="commentbox_focus = 1;" onblur="commentbox_focus=0;"/>

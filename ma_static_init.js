@@ -53,6 +53,57 @@ function gup_frame_step() {
     return framestep;
 }
 
+// PA : Generate Image URL
+function img_url(i) {
+	var imagename = gup("imgname");
+        var num_frames = gup_num_frames();
+        var framestep = gup_frame_step();
+	var idxfname = imagename.lastIndexOf('/');
+	var fpath = imagename.substring(0, idxfname)
+	var fname = imagename.substring(idxfname + 1);
+
+	var idxext = fname.lastIndexOf('.');
+	var fext = fname.substring(idxext + 1);
+	fname = fname.substring(0, idxext)
+
+	var frameidx = parseInt(fname, 10)
+	var is_zero_pad = false;
+	if (fname.length > frameidx.toString().length)
+	    is_zero_pad = true;
+
+	next_frameidx_str = (frameidx + i*framestep).toString()
+
+	if (is_zero_pad) {
+	    while (next_frameidx_str.length < fname.length)
+		next_frameidx_str = "0" + next_frameidx_str;
+	}
+
+	urlstr = fpath + "/" + next_frameidx_str + "." + fext
+	return urlstr;
+}
+
+// PA : Preload Images  
+function preload_images() {
+    //$("#tool_container").hide();
+    $("#submit_container").hide(); 
+    $("#intro_text").hide(); 
+
+    var allImages = [];
+    for (var i=0; i < gup_num_frames(); ++i) {
+      allImages.push(img_url(i));
+    }
+    preload(allImages, preloadslider($("#loadingscreenslider"), function(progress) {
+        if (progress == 1)
+        {
+          $("#loadingscreen").remove();
+          //$("#tool_container").show();
+          $("#submit_container").show();
+          $("#intro_text").show(); 
+          init_objectui();
+        }
+      })
+    );
+}
 
 function init_objectui() {
 
@@ -94,9 +145,11 @@ function init_objectui() {
     job.labels = new Array();
     //job.labels[0] = "Car";
     job.labels[0] = "Person";
-    job.labels[1] = "Clothing Item";
+    //job.labels[1] = "Clothing Item";
 
-    job.attributes = [];
+    //job.attributes = [["Staff+", "Examining products+"]];
+    job.attributes = [["Examining products+"]];
+    //job.attributes = [[]];
     job.training = 0;
 
     //var param_min_box_width = gup("min_box_width");
@@ -115,44 +168,7 @@ function init_objectui() {
 	console.log("camidx: " + job.camidx);
     }
     
-    job.frameurl = function(i)
-    {
-	var idxfname = imgname.lastIndexOf('/');
-	var fpath = imgname.substring(0, idxfname)
-	var fname = imgname.substring(idxfname + 1);
-
-	var idxext = fname.lastIndexOf('.');
-	var fext = fname.substring(idxext + 1);
-	fname = fname.substring(0, idxext)
-
-	var frameidx = parseInt(fname, 10)
-	var is_zero_pad = false;
-	if (fname.length > frameidx.toString().length)
-	    is_zero_pad = true;
-
-	//console.log(fpath)
-	//console.log(fname)
-	//console.log(fext)
-	//console.log(is_zero_pad)
-
-	next_frameidx_str = (frameidx + i*framestep).toString()
-
-	if (is_zero_pad) {
-	    while (next_frameidx_str.length < fname.length)
-		next_frameidx_str = "0" + next_frameidx_str;
-	}
-
-	urlstr = fpath + "/" + next_frameidx_str + "." + fext
-	//console.log(urlstr)
-	return urlstr;
-
-	//return imgname;
-
-        // folder1 = parseInt(Math.floor(i / 100));
-        // folder2 = parseInt(Math.floor(i / 10000));
-        // return "frames/" + me.slug + 
-        //     "/" + folder2 + "/" + folder1 + "/" + parseInt(i) + ".jpg";
-    }
+    job.frameurl = img_url; 
 
     var videoframe = $("#videoframe");
     
@@ -227,35 +243,70 @@ function init_objectui() {
 }
 
 // what to submit to AMT server
+
+/*
+  format
+  "track_labeler", <image_name>,
+  num_track_attributes
+  attribute_name1, ..., attribute_nameN
+  num_frames, 
+  for each frame:
+  num_tracks_in_this_frame, track_id, x1, y1, x2, y2, attribute_val1, ..., attribute_valN
+*/
+
 function get_results_string(){
-    imgname = gup("imgname");
-    var result = "label_cars, " + imgname;
-
-    // for (var tidx = 0; tidx < tracks.tracks.length; ++tidx) {
-    // 	console.log("track " + tidx + ": " + tracks.tracks[tidx].label);
-    // }
     
-    for (var tidx = 0; tidx < tracks.tracks.length; ++tidx) {
-	console.log("track: " + tidx + ", deleted: " + tracks.tracks[tidx].deleted);
+    var result = {task_type: 'track_labeler'}
 
-	if (!tracks.tracks[tidx].deleted) {
-    	    result += "," + tracks.tracks[tidx].journal.annotations[0].xtl; 
-    	    result += "," + tracks.tracks[tidx].journal.annotations[0].ytl; 
-    	    result += "," + tracks.tracks[tidx].journal.annotations[0].xbr; 
-    	    result += "," + tracks.tracks[tidx].journal.annotations[0].ybr; 
-    	    result += "," + Number(tracks.tracks[tidx].journal.annotations[0].occluded); 
-    	    result += "," + Number(tracks.tracks[tidx].journal.annotations[0].outside); 
+    // MA: assume there is only one object type
+    result.imgname = imgname
+    result.attributes = job.attributes[0]
+    result.num_frames = gup_num_frames()
+
+    result.frames = [];
+
+    for (var fidx = 0; fidx < num_frames; ++fidx) {
+	var cur_frame = []
+	for (var tidx = 0; tidx < tracks.tracks.length; ++tidx) {
+	    if (!tracks.tracks[tidx].deleted) {
+		
+		// skip frames where object is marked as "outside"
+		if (fidx in tracks.tracks[tidx].journal.annotations) 
+		    if (tracks.tracks[tidx].journal.annotations[fidx].outside)
+			continue;
+
+		est_pos = tracks.tracks[tidx].estimate(fidx)
+
+		var cur_pos = {
+		    id: tidx,
+		    x1: est_pos.xtl,
+    		    y1: est_pos.ytl, 
+    		    x2: est_pos.xbr,
+    		    y2: est_pos.ybr,
+		}
+
+		var cur_attrib = []
+		var num_attributes = job.attributes[0].length
+		for (var aidx = 0; aidx < num_attributes; ++aidx) 
+		    cur_attrib.push(tracks.tracks[tidx].estimateattribute(aidx, fidx))
+		
+		cur_frame.push({pos: cur_pos, attrib: cur_attrib})
+
+	    }
 	}
+	result.frames.push(cur_frame)
     }
 
-    console.log("result: " + result);
-    return result;
+    return JSON.stringify(result)
 }
 
 // grab the results and submit to the server
 function submitResults(){
     var results = get_results_string();
+    console.log(results)
+
     document.getElementById('object_bbox').value = results;
 
-    document.forms["mturk_form"].submit();
+    // MA: temporary
+    //document.forms["mturk_form"].submit();
 }

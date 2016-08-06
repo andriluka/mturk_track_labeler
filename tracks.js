@@ -23,6 +23,7 @@ function BoxDrawer(container, _predict_box)
 
     // MA: define how new boxes are created (predicted from image positon or by user)
     this.predict_box = _predict_box;
+    console.log("predict_box: " + me.predict_box)
 
     /*
      * Enables the drawer.
@@ -91,6 +92,12 @@ function BoxDrawer(container, _predict_box)
 		else {
                     this.finishdrawing(xc, yc);
 		}
+	    }
+	}
+	else {
+	    // MA: process "move on click"
+	    if (this.onclick) {
+		this.onclick(xc, yc);
 	    }
 	}
     }
@@ -547,6 +554,10 @@ function Track(player, color, position)
         var height = this.player.job.height;
         var pos = this.pollposition();
 
+	// MA: predict box size on move
+	if (this.player.job.camidx >= 0)
+	    pos = this.player.job.job_predict_box(0.5*(pos.xtl + pos.xbr), 0.5*(pos.ytl + pos.ybr))
+
         if (pos.xtl > width)
         {
             pos = new Position(width - pos.width, pos.ytl, width, pos.ybr);
@@ -783,6 +794,9 @@ function Track(player, color, position)
                     me.recordposition();                
                     me.notifyupdate();
                     eventlog("draggable", "Drag-n-drop a box");
+
+		    // MA:
+		    player.job.last_track = me;
                 },
                 cancel: ".boundingboxtext"
             });
@@ -984,17 +998,25 @@ function Track(player, color, position)
             return bounds['right'];
         }
 
-        var fdiff = bounds['rightframe'] - bounds['leftframe'];
-        var xtlr = (bounds['right'].xtl - bounds['left'].xtl) / fdiff;
-        var ytlr = (bounds['right'].ytl - bounds['left'].ytl) / fdiff;
-        var xbrr = (bounds['right'].xbr - bounds['left'].xbr) / fdiff;
-        var ybrr = (bounds['right'].ybr - bounds['left'].ybr) / fdiff;
+	if (player.job.do_interpolate) {
+            var fdiff = bounds['rightframe'] - bounds['leftframe'];
+            var xtlr = (bounds['right'].xtl - bounds['left'].xtl) / fdiff;
+            var ytlr = (bounds['right'].ytl - bounds['left'].ytl) / fdiff;
+            var xbrr = (bounds['right'].xbr - bounds['left'].xbr) / fdiff;
+            var ybrr = (bounds['right'].ybr - bounds['left'].ybr) / fdiff;
 
-        var off = frame - bounds['leftframe'];
-        var xtl = bounds['left'].xtl + xtlr * off;
-        var ytl = bounds['left'].ytl + ytlr * off;
-        var xbr = bounds['left'].xbr + xbrr * off;
-        var ybr = bounds['left'].ybr + ybrr * off;
+            var off = frame - bounds['leftframe'];
+            var xtl = bounds['left'].xtl + xtlr * off;
+            var ytl = bounds['left'].ytl + ytlr * off;
+            var xbr = bounds['left'].xbr + xbrr * off;
+            var ybr = bounds['left'].ybr + ybrr * off;
+	}
+	else {
+            var xtl = bounds['left'].xtl;
+            var xbr = bounds['left'].xbr;
+            var ytl = bounds['left'].ytl;
+            var ybr = bounds['left'].ybr;
+	}
 
         var occluded = false;
         var outside = false;

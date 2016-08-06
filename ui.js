@@ -254,7 +254,7 @@ function ui_setupbuttons(job, player, tracks)
     });
 
     // MA
-    $("#playbutton").button("option", "disabled", true);
+    //$("#playbutton").button("option", "disabled", true);
 
 }
 
@@ -274,26 +274,63 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
 	console.log("Key press: " + keycode);
         
         //if (keycode == 32 || keycode == 112 || keycode == 116 || keycode == 98)
+
+
+
+	// MA: use 'e' to toggle the first attribute of the track
+	if (keycode == 101)
+        {
+	    if (tracks.currentid > -1) {		
+		// MA: check that object has at least one attribute
+		el = document.getElementById("trackobject" + tracks.currentptr.id + "attribute0");
+		if (el) {
+		    var cur_checkbox_state = $("#trackobject" + tracks.currentptr.id + "attribute0").attr("checked");
+		    console.log("begin: current state: " + cur_checkbox_state);
+
+		    document.getElementById("trackobject" + tracks.currentptr.id + "attribute0").checked = !cur_checkbox_state;
+		    tracks.currentptr.track.attributejournals[0].mark(player.frame, !cur_checkbox_state);
+		    tracks.currentptr.track.notifyupdate();
+
+		    cur_checkbox_state = $("#trackobject" + tracks.currentptr.id + "attribute0").attr("checked");
+		    console.log("end: current state: " + cur_checkbox_state);
+		}
+	    }	    
+        }
+	// MA: use 't' to toggle between outside/inside view frame 
 	if (keycode == 116)
         {
-	    // MA
-            //$("#playbutton").click();
+	    if (tracks.currentid > -1) {		
+		var cur_checkbox_state = $("#trackobject" + tracks.currentptr.id + "lost").attr("checked");
+		console.log("begin: current state: " + cur_checkbox_state);
 
-	    // MA: skip labeling occlusion/truncation
-	    if (false) {
-	    //if (tracks.currentid > -1) {		
-		var cur_checkbox_state = $("#trackobject" + tracks.currentptr.id + "occluded").attr("checked");
-		// console.log("begin: current state: " + cur_checkbox_state);
-
-		document.getElementById("trackobject" + tracks.currentptr.id + "occluded").checked = !cur_checkbox_state;
-		tracks.currentptr.track.setocclusion(!cur_checkbox_state);
+		document.getElementById("trackobject" + tracks.currentptr.id + "lost").checked = !cur_checkbox_state;
+		tracks.currentptr.track.setoutside(!cur_checkbox_state);
 		tracks.currentptr.track.notifyupdate();
 
-		// cur_checkbox_state = $("#trackobject" + tracks.currentid + "occluded").attr("checked");
-		// console.log("end: current state: " + cur_checkbox_state);
-	    }
-	    
+		cur_checkbox_state = $("#trackobject" + tracks.currentid + "lost").attr("checked");
+		console.log("end: current state: " + cur_checkbox_state);
+	    }	    
         }
+	// if (keycode == 116)
+        // {
+	//     // MA
+        //     //$("#playbutton").click();
+
+	//     // MA: skip labeling occlusion/truncation
+	//     if (false) {
+	//     //if (tracks.currentid > -1) {		
+	// 	var cur_checkbox_state = $("#trackobject" + tracks.currentptr.id + "occluded").attr("checked");
+	// 	// console.log("begin: current state: " + cur_checkbox_state);
+
+	// 	document.getElementById("trackobject" + tracks.currentptr.id + "occluded").checked = !cur_checkbox_state;
+	// 	tracks.currentptr.track.setocclusion(!cur_checkbox_state);
+	// 	tracks.currentptr.track.notifyupdate();
+
+	// 	// cur_checkbox_state = $("#trackobject" + tracks.currentid + "occluded").attr("checked");
+	// 	// console.log("end: current state: " + cur_checkbox_state);
+	//     }	    
+        // }
+
         else if (keycode == 110)
         {
             $("#newobjectbutton").click();
