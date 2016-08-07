@@ -287,7 +287,7 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
 
         for (var i = 0; i < attributes.length; i++)
         {
-            track.attributejournals[attributes[i][0]].mark(attributes[i][1], attributes[i][2]);
+            track.attributejuiournals[attributes[i][0]].mark(attributes[i][1], attributes[i][2]);
             console.log("Injecting attribute " + attributes[i][0] + " at frame " + attributes[i][1] + " to " + attributes[i][2]);
         }
 
@@ -395,7 +395,7 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
 
 	var html = "<div id='bonus_counter'><p align='center'>Bonus for labeled objects:<br><font color='DarkOrange'>0.00 USD</font></p></div>";
 
-        html += "<p align='center'>Keyboard shortcuts: <font color='blue'>'n'</font> - new object, <font color='blue'>'t'</font> - toggle 'outside of view frame' state, <font color='blue'>'e'</font> - toggle 'examining products' state, <font color='blue'>'d'</font> - delete object, <font color='blue'>'c'</font> - seek back by one frame, <font color='blue'>'v'</font> - seek forward by one frame.</p><br>";
+        html += "<p align='center'>Keyboard shortcuts: <font color='blue'>'n'</font> - new object, <font color='blue'>'t'</font> - toggle 'outside of view frame' state, <font color='blue'>'e'</font> - toggle 'examining products' state, <font color='blue'>'d'</font> - delete object, <font color='blue'>'c'</font> - seek back by one frame, <font color='blue'>'v'</font> - seek forward by one frame.</p><p align='center'>Other shortcuts: <font color='blue'>'mouse click'</font> - move the most recently edited object to click location</p>";
 
 	// MA: ETH dataset 
 	// if (hintidx == 0) {
