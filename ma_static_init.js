@@ -63,8 +63,16 @@ function img_url(i) {
 	var fname = imagename.substring(idxfname + 1);
 
 	var idxext = fname.lastIndexOf('.');
-	var fext = fname.substring(idxext + 1);
-	fname = fname.substring(0, idxext)
+        var fext = fname.substring(idxext + 1);
+    
+        fname = fname.substring(0, idxext);
+        var sidx = fname.lastIndexOf('_');
+        fsuffix = "";
+
+        if (sidx != -1) {
+            fsuffix = fname.substring(sidx);
+            fname = fname.substring(0, sidx);
+	}
 
 	var frameidx = parseInt(fname, 10)
 	var is_zero_pad = false;
@@ -78,7 +86,7 @@ function img_url(i) {
 		next_frameidx_str = "0" + next_frameidx_str;
 	}
 
-	urlstr = fpath + "/" + next_frameidx_str + "." + fext
+	urlstr = fpath + "/" + next_frameidx_str + fsuffix + "." + fext
 	return urlstr;
 }
 
