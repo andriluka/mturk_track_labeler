@@ -277,13 +277,10 @@ function get_results_string(){
 	var cur_frame = []
 	for (var tidx = 0; tidx < tracks.tracks.length; ++tidx) {
 	    if (!tracks.tracks[tidx].deleted) {
-		
-		// skip frames where object is marked as "outside"
-		if (fidx in tracks.tracks[tidx].journal.annotations) 
-		    if (tracks.tracks[tidx].journal.annotations[fidx].outside)
-			continue;
-
 		est_pos = tracks.tracks[tidx].estimate(fidx)
+
+		if (est_pos.outside) 
+		    continue;
 
 		var cur_pos = {
 		    id: tidx,
