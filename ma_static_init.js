@@ -284,10 +284,10 @@ function get_results_string(){
 
 		var cur_pos = {
 		    id: tidx,
-		    x1: est_pos.xtl,
-    		    y1: est_pos.ytl, 
-    		    x2: est_pos.xbr,
-    		    y2: est_pos.ybr,
+		    x1: Math.round(est_pos.xtl),
+    		    y1: Math.round(est_pos.ytl), 
+    		    x2: Math.round(est_pos.xbr),
+    		    y2: Math.round(est_pos.ybr),
 		}
 
 		var cur_attrib = []
