@@ -308,10 +308,8 @@ function get_results_string(){
 // grab the results and submit to the server
 function submitResults(){
     var results = get_results_string();
-    console.log(results)
+    //console.log(results)
 
     document.getElementById('object_bbox').value = results;
-
-    // MA: temporary
-    //document.forms["mturk_form"].submit();
+    document.forms["mturk_form"].submit();
 }
