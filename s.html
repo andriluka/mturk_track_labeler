@@ -57,11 +57,11 @@
   //<div id='instructionsbutton' class='button'>Instructions</div>
   //Read these <a href='label_cars_instructions/index.html'>instructions</a> before you start.
 
-  //var cur_html = "<table><tr align='center'><td>Label all vehicles (cars, trucks, motorcycles, etc...) you see in the image. Label vehicles not traveling on our road if <strong> 60% </strong> or more of the vehicle is showing, and there is no doubt they are vehicles.";
+   var cur_html = "<table><div id='intro_text'>Label the people in the image sequence by marking their head with a bounding box. Please label each person using the box with the same ID and color throughout the sequence. ";
 
-   var cur_html = "<table><div id='intro_text'>Label people in the image by marking their head with a bounding box. ";
-   if (param_min_box_width > 0) {
-  	cur_html += "Please only label a person if corresponding bounding box is wider than <strong>" + param_min_box_width + " pixels</strong>. ";
+     cur_html += " If this is the first time you are doing this task please watch this <a href='youtube.com'>example video</a>. "
+
+   if (param_min_box_width > 0) { cur_html += "Please only label a person if corresponding bounding box is wider than <strong>" + param_min_box_width + " pixels</strong>. ";
    }
 
   if (param_object_bonus_usd > 0) {

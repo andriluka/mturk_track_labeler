@@ -267,9 +267,10 @@ function get_results_string(){
     var result = {task_type: 'track_labeler'}
 
     // MA: assume there is only one object type
-    result.imgname = imgname
-    result.attributes = job.attributes[0]
-    result.num_frames = gup_num_frames()
+    result.imgname = imgname;
+    result.attributes = job.attributes[0];
+    result.num_frames = gup_num_frames();
+    result.frame_step = gup_frame_step();
 
     result.frames = [];
 
